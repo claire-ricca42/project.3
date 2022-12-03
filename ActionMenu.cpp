@@ -236,8 +236,8 @@ int ActionMenu::NormalSpace(int row, int col, Merchant temp, Start temp2, Map te
             //remove one from cauldron index
             //remove 5 kg from ingredients
             int amount_caul=temp.getAmountofCookware(1);
-            amount_cau; --;
-            temp.setAmountofCookware(0, amount_cau;);
+            amount_caul --;
+            temp.setAmountofCookware(0, amount_caul);
             temp.setIng(-5);
             //setIng definition for reference as to why -5 is the int parameter
             // void Merchant::setIng(int ings_)
