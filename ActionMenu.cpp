@@ -26,18 +26,29 @@ int ActionMenu::NormalSpace(int row, int col, Merchant temp, Start temp2, Map te
     int cookware;
     //getActionOption();
     if (temp2.getPlayerFullness() == 0 || temp2.getSorcererAnger()==100 )
+    {
+        for (int i = 0; i < 4; i++)
         {
-            /* code */
-            for (int i = 0; i < 4; i++)
+            int ret_val =0;
+            ret_val += temp2.getPartyMemberFullness(i);
+            if (ret_val==0)
             {
-                if (temp2.getPartyMemberFullness(i)==0)
-                {
-                    return -1;
-                }
-                
+                cout<<"Your party died of starvation,  GAME OVER."<<endl;
+                return -1;
             }
+            
+        }
+        if (temp2.getPlayerFullness() == 0)
+        {
+            cout<<"You died of starvation! GAME OVER."<<endl;
             return -1;
         }
+        if (temp2.getSorcererAnger()==100 )
+        {
+            cout<<"The Scorcerer's Anger reach 100! GAME OVER."<<endl;
+            return -1;
+        }
+    }
     while (action_option !=5)
     {
         
@@ -60,16 +71,35 @@ int ActionMenu::NormalSpace(int row, int col, Merchant temp, Start temp2, Map te
         if (random == (rand()%10) || random == (rand()%10))
         {
             //reduce hunger by 1
+            int party_amt=4;
             for (int i = 0; i < 4; i++)
             {
                 int party_fullness= temp2.getPartyMemberFullness(i) ;
                 party_fullness -= 1;
                 temp2.setPartyFullness(i, party_fullness);
+                if (temp2.getPartyMemberFullness(i) == 0)
+                {
+                    party_amt --;
+                    if (party_amt == 0)
+                    {
+                        cout<<"Your party has died of starvation, GAME OVER"<<endl;
+                        return -1;
+                    }
+                    
+                    cout<<"OH!" <<temp2.getPartyMemberArray(i)<<" died of starvation! You have "<<party_amt<<" party members left."<<endl;
+                }
             }
 
             int player_fullness = temp2.getPlayerFullness();
             player_fullness --;
             temp2.setPlayerFullness(player_fullness);
+            if (temp2.getPlayerFullness() == 0)
+            {
+                cout<<"You have died of starvation, GAME OVER"<<endl; 
+                return -1;
+            }
+            
+
             
         }
         
@@ -143,16 +173,34 @@ int ActionMenu::NormalSpace(int row, int col, Merchant temp, Start temp2, Map te
         if (rand3 == (rand()%10) || rand3 == (rand()%10) || rand3 == (rand()%10) || rand3 == (rand()%10) || rand3 == (rand()%10))
         {
             //reduce hunger by 1
+            //if fought mounster { break;}
+            int party_amt=4;
             for (int i = 0; i < 4; i++)
             {
                 int party_fullness= temp2.getPartyMemberFullness(i) ;
                 party_fullness -= 1;
                 temp2.setPartyFullness(i, party_fullness);
+                if (temp2.getPartyMemberFullness(i) == 0)
+                {
+                    party_amt --;
+                    if (party_amt == 0)
+                    {
+                        cout<<"Your party has died of starvation, GAME OVER"<<endl;
+                        return -1;
+                    }
+                    
+                    cout<<"OH!" <<temp2.getPartyMemberArray(i)<<" died of starvation! You have "<<party_amt<<" party members left."<<endl;
+                }
             }
 
             int player_fullness = temp2.getPlayerFullness();
             player_fullness --;
             temp2.setPlayerFullness(player_fullness);
+            if (temp2.getPlayerFullness() == 0)
+            {
+                cout<<"You have died of starvation, GAME OVER"<<endl; 
+                return -1;
+            }
             
             //if player fought monster, chance is not applied twice
 
@@ -259,6 +307,10 @@ int ActionMenu::NormalSpace(int row, int col, Merchant temp, Start temp2, Map te
             temp2.setPlayerFullness(player_fullness);
 
         }
+    default:
+        cout<<"Invalid option, what would you like to do?"<<endl;
+        cin>>action_option;
+        break;
     }
     }
     if (action_option == 5)
@@ -271,24 +323,125 @@ int ActionMenu::NormalSpace(int row, int col, Merchant temp, Start temp2, Map te
 
 int ActionMenu::NPCSpace(int row, int col, Merchant temp, Start temp2, Map temp3)
 {
-    //reveal space, let player know they met an NPC
+    //reveal NPC
+    char movement;
+    if (temp2.getPlayerFullness() == 0 || temp2.getSorcererAnger()==100 )
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            int ret_val =0;
+            ret_val += temp2.getPartyMemberFullness(i);
+            if (ret_val==0)
+            {
+                cout<<"Your party died of starvation,  GAME OVER."<<endl;
+                return -1;
+            }
+            
+        }
+        if (temp2.getPlayerFullness() == 0)
+        {
+            cout<<"You died of starvation! GAME OVER."<<endl;
+            temp.statusUpdate(temp2, temp, temp3);
+            return -1;
+        }
+        if (temp2.getSorcererAnger()==100 )
+        {
+            cout<<"The Scorcerer's Anger reach 100! GAME OVER."<<endl;
+            temp.statusUpdate(temp2, temp, temp3);
+            return -1;
+        }
+    }
+    while (action_option != 3)
+    {
     
     switch (getActionOption())
     {
     case 1://move
-        
+        cout<<"Which direction would you like to move? (w,a,s,d)"<<endl;
+        cin>>movement;
+        move(movement);
+        //20% of hunger dropping or each memeber
+        int random= rand()%10;
+        if (random == (rand()%10) || random == (rand()%10))
+        {
+            //reduce hunger by 1
+            for (int i = 0; i < 4; i++)
+            {
+                int party_fullness= temp2.getPartyMemberFullness(i) ;
+                party_fullness -= 1;
+                temp2.setPartyFullness(i, party_fullness);
+            }
+
+            int player_fullness = temp2.getPlayerFullness();
+            player_fullness --;
+            temp2.setPlayerFullness(player_fullness);
+            
+        }
         break;
-    case 2://speak to npc
-        break;
-    case 3://end game
-        
+    case 2://speak to npc...riddles.h
+
         break;
     default:
+        cout<<"Invalid option, what would you like to do?"<<endl;
+        cin>>action_option;  
         break;
     }
+    }
+    if (action_option == 3)
+    {
+        cout<<"You gave up, GAME OVER."<<endl;
+        return -1;
+    }
+    
 }
 
 int ActionMenu::RoomSpace(int row, int col, Merchant temp, Start temp2, Map temp3)
 {
+    if (temp2.getPlayerFullness() == 0 || temp2.getSorcererAnger()==100 )
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            int ret_val =0;
+            ret_val += temp2.getPartyMemberFullness(i);
+            if (ret_val==0)
+            {
+                cout<<"Your party died of starvation,  GAME OVER."<<endl;
+                return -1;
+            }
+            
+        }
+        if (temp2.getPlayerFullness() == 0)
+        {
+            cout<<"You died of starvation! GAME OVER."<<endl;
+            temp.statusUpdate(temp2, temp, temp3);
+            return -1;
+        }
+        if (temp2.getSorcererAnger()==100 )
+        {
+            cout<<"The Scorcerer's Anger reach 100! GAME OVER."<<endl;
+            temp.statusUpdate(temp2, temp, temp3);
+            return -1;
+        }
+    }
+    while (action_option !=3)
+    {
+        switch (action_option)
+        {
+        case 1:
+            /* code */
+            break;
+        case 2:
+            break;
+        default:
+            cout<<"Invalid option, what would you like to do?"<<endl;
+            cin>>action_option;
+            break;
+        }
+    }
+    if (action_option == 3)
+    {
+        cout<<"You gave up, GAME OVER!"<<endl;
+    }
+    
 
 }
